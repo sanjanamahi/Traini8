@@ -1,0 +1,20 @@
+package com.task.service;
+
+import com.task.dto.PropertyTaskDto;
+import com.task.entity.PropertyTaskEntity;
+
+import java.util.List;
+
+public interface PropertyTask {
+
+    public PropertyTaskDto addPropertyTask(PropertyTaskDto propertyTaskDto);
+
+
+    void deletePropertyTask(long propertyTaskId);
+
+    PropertyTaskEntity updatePropertyTask(long propertyTaskId,PropertyTaskDto dto);
+
+    List<PropertyTaskEntity> getPropertyTasks();
+
+    PropertyTaskEntity getPropertyTaskById(long propertyTaskId);
+}
