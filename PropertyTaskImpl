@@ -1,0 +1,107 @@
+package com.task.service;
+
+import com.task.dto.PropertyTaskDto;
+import com.task.entity.PropertyTaskEntity;
+import com.task.exception.ResourceNotFoundException;
+import com.task.repository.PropertyTaskRepository;
+import org.springframework.stereotype.Service;
+
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+
+@Service
+public class PropertyTaskImpl implements PropertyTask {
+    private PropertyTaskRepository propertyTaskRepository;
+
+    public PropertyTaskImpl(PropertyTaskRepository propertyTaskRepository) {
+        this.propertyTaskRepository = propertyTaskRepository;
+    }
+
+
+    @Override
+    public PropertyTaskDto addPropertyTask(PropertyTaskDto dto) {
+        //hybernate can not take dto content and save it to database it should be an entity class
+        //whose object content repository can push into database using hybernate
+
+        PropertyTaskEntity entity=new PropertyTaskEntity();
+        entity.setCenterName(dto.getCenterName());//This copying the data from dto to entity
+        entity.setCenterCode(dto.getCenterCode());
+        entity.setDetailedAddress(dto.getDetailedAddress());
+        entity.setCity(dto.getCity());
+        entity.setState(dto.getState());
+        entity.setPincode(dto.getPincode());
+        entity.setStudentCapacity(dto.getStudentCapacity());
+        entity.setCoursesOffered(dto.getCoursesOffered());
+      //  entity.setCreatedOn(dto.getCreatedOn());
+        entity.setContactEmail(dto.getContactEmail());
+        entity.setContactPhone(dto.getContactPhone());
+
+        PropertyTaskEntity savedPropertyTask = propertyTaskRepository.save(entity);
+        PropertyTaskDto puo = new PropertyTaskDto();
+        puo.setId(savedPropertyTask.getId());
+        puo.setCenterName(savedPropertyTask.getCenterName());
+        puo.setCenterCode(savedPropertyTask.getCenterCode());
+        puo.setDetailedAddress(savedPropertyTask.getDetailedAddress());
+        puo.setCity(savedPropertyTask.getCity());
+        puo.setState(savedPropertyTask.getState());
+        puo.setPincode(savedPropertyTask.getPincode());
+        puo.setStudentCapacity(savedPropertyTask.getStudentCapacity());
+        puo.setCoursesOffered(savedPropertyTask.getCoursesOffered());
+        puo.setContactEmail(savedPropertyTask.getContactEmail());
+        puo.setContactPhone(savedPropertyTask.getContactPhone());
+        puo.setCreatedOn(new Date());//here createdOn field should be populated from the
+        // server based on the server timestamp,and not the users input present for the field.
+        return puo;
+
+
+    }
+
+    @Override
+    public void deletePropertyTask(
+            long propertyTaskId
+
+    ) {
+        propertyTaskRepository.deleteById(propertyTaskId);
+
+    }
+
+    @Override
+    public PropertyTaskEntity updatePropertyTask(long propertyTaskId,
+                                                 PropertyTaskDto dto) {
+        Optional<PropertyTaskEntity> byId = propertyTaskRepository.findById(propertyTaskId);
+        PropertyTaskEntity propertyTaskEntity = byId.get();
+
+        propertyTaskEntity.setCenterName(dto.getCenterName());
+        propertyTaskEntity.setCenterCode(dto.getCenterCode());
+        propertyTaskEntity.setDetailedAddress(dto.getDetailedAddress());
+        propertyTaskEntity.setCity(dto.getCity());
+        propertyTaskEntity.setState(dto.getState());
+        propertyTaskEntity.setPincode(dto.getPincode());
+        propertyTaskEntity.setStudentCapacity(dto.getStudentCapacity());
+        propertyTaskEntity.setCoursesOffered(dto.getCoursesOffered());
+        propertyTaskEntity.setContactEmail(dto.getContactEmail());
+        propertyTaskEntity.setContactPhone(dto.getContactPhone());
+        return propertyTaskRepository.save(propertyTaskEntity);
+
+
+
+    }
+
+    @Override
+    public List<PropertyTaskEntity> getPropertyTasks() {
+        return propertyTaskRepository.findAll();
+
+
+    }
+
+    @Override
+    public PropertyTaskEntity getPropertyTaskById(long propertyTaskId) {
+        PropertyTaskEntity propertyTaskEntity = propertyTaskRepository.findById
+                (propertyTaskId).orElseThrow(()->new ResourceNotFoundException
+                ("empty list found in the Training center : " + propertyTaskId));
+        return propertyTaskEntity;
+    }
+
+
+}
