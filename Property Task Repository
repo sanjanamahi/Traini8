@@ -1,0 +1,7 @@
+package com.task.repository;
+
+import com.task.entity.PropertyTaskEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
+//this layer saves the data to the database
+public interface PropertyTaskRepository extends JpaRepository<PropertyTaskEntity, Long> {
+}
