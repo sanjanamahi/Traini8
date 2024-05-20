@@ -1,0 +1,85 @@
+package com.task.controller;
+
+import com.task.dto.PropertyTaskDto;
+import com.task.entity.PropertyTaskEntity;
+import com.task.service.PropertyTask;
+
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController  //Rest API Class
+@RequestMapping("/api/v1/propertyTask")
+
+public class PropertyTaskController {
+
+    private PropertyTask pu; //class upcasting,This is an interface
+
+    public PropertyTaskController(PropertyTask pu) {//constructor parameter this will
+        //automatically inject the object the child object of the interfaces is automatically injected inti it
+        //u need not write @autowired here
+        this.pu = pu;
+    }
+
+
+    //http://localhost:8080/api/v1/propertyTask/addPropertyTask
+    //PostMapping is when u are creating a record through api submitting of the data to the api
+    //to create a record that method should have
+    @PostMapping ("/addPropertyTask")
+    public ResponseEntity< ?> addPropertyTask(   @Valid @RequestBody PropertyTaskDto dto,
+                                                               BindingResult result
+                                                               ){
+
+        //that data should get copied here dto,@ReqBody whatever content of json is there now it will go to this object
+        //in order to copy json content to this java object
+        if(result.hasErrors()){
+            return new ResponseEntity<>(result.getFieldError().getDefaultMessage(), HttpStatus.OK);
+
+        }
+        PropertyTaskDto propertyTaskDto = pu.addPropertyTask(dto);
+        return new ResponseEntity<>(propertyTaskDto, HttpStatus.CREATED);
+//the controller captures the data from the postman into the dto and that captured data from the dto its giving it to service layer
+
+//once we save the record we have to return back an appropriate response to postman that what u saved
+        //how do i send this appropriate response back to return a response back to postman as a json
+        //we use a builtin class called as ReasponseEntity and what u want to return i want to return PropertyTaskDto.
+
+
+
+    }
+    @DeleteMapping
+    public ResponseEntity<String>deletePropertyTask(
+       @RequestParam     Long propertyTaskId
+    ){
+        pu.deletePropertyTask(propertyTaskId);
+        return new ResponseEntity<>("Record Deleted", HttpStatus.OK);
+
+    }
+    //http://localhost:8080/api/v1/propertyTask/1
+    @PutMapping("/{propertyTaskId}")
+    public ResponseEntity<PropertyTaskEntity>updatePropertyTask(
+     @PathVariable  Long propertyTaskId ,
+    @RequestBody PropertyTaskDto dto
+
+    ){
+       PropertyTaskEntity propertyTask =  pu.updatePropertyTask(propertyTaskId,dto);
+        return new ResponseEntity<>(propertyTask, HttpStatus.OK);
+
+    }
+    @GetMapping
+    public ResponseEntity<List<PropertyTaskEntity>> getPropertyTasks(){
+        List<PropertyTaskEntity> propertyTaskEntities = pu.getPropertyTasks();
+        return new ResponseEntity<>(propertyTaskEntities, HttpStatus.OK);
+
+    }
+    @GetMapping("/getTaskById")
+    public ResponseEntity<PropertyTaskEntity> getPropertyTaskById(@RequestParam long propertyTaskId) {
+        PropertyTaskEntity propertyTaskEntities = pu.getPropertyTaskById(propertyTaskId);
+        return new ResponseEntity<>(propertyTaskEntities, HttpStatus.OK);
+    }
+
+}
