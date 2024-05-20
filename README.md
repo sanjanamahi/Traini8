@@ -9,3 +9,5 @@ postman -controller-service-repository-database
 database -repository-service-controller-postman
 repository layer saves the data to the database
 here repository layer interacts with database
+languages used-JAVA 8
+Database-MYSQL 
