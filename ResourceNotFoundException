@@ -1,0 +1,11 @@
+package com.task.exception;
+
+
+
+//here from ordinary java class to it becomes custom exception class
+//hera RNFE ,i will used this object whenever a record not found for a particular id,lets implement this.
+public class ResourceNotFoundException extends RuntimeException {
+    public ResourceNotFoundException(String message) {
+        super(message);//super keyword is calling its parent class constructor runtime _exception_Throwable
+    }
+}
